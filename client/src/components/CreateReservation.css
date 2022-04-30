@@ -1,0 +1,46 @@
+/* Reservation Form styling */
+
+.form-wrapper {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 2rem;
+}
+
+/* Format box effects both a label and input group */
+.form-wrapper .form-box {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.form-label,
+.form-input {
+  font-size: large;
+  font-weight: bold;
+}
+
+.form-input {
+  padding: 1rem;
+  width: 100%;
+  border-radius: 0.25rem;
+  border-color: whitesmoke;
+  box-sizing: border-box;
+}
+
+/* Format form submit button */
+.btn-submit {
+  border: 2px solid transparent;
+  background: #d83a38;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: medium;
+}
+.btn-submit:active,
+.btn-submit:hover {
+  color: #d83a38;
+  background: white;
+  border-color: #d83a38;
+}

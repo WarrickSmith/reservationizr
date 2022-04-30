@@ -1,0 +1,17 @@
+/* Styling for /reservation component */
+
+.reservation {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px dashed #ccc;
+}
+
+.reservation-ul {
+  padding: 0;
+}
+
+.reservation-list-item {
+  list-style: none;
+  margin-bottom: 4rem;
+  line-height: 1rem;
+}

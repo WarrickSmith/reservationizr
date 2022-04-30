@@ -1,0 +1,33 @@
+/* Styling for /restaurantlist component */
+
+.restaurants-ul {
+  padding: 0;
+}
+
+.restaurant-list {
+  list-style: none;
+  margin-bottom: 4rem;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  padding: 1rem 1rem 0rem 1rem;
+}
+
+.restaurant-name {
+  margin-top: 0rem;
+}
+
+.text-bold-white {
+  color: white;
+}
+
+/* Media breakpoint for screen widths larger then average mobile screen */
+@media only screen and (min-width: 38rem) {
+  .restaurant-list {
+    display: grid;
+    grid-template-columns: 1fr 1.75fr;
+    column-gap: 2rem;
+  }
+  .restaurant-name {
+    font-size: large;
+    margin-top: 0;
+  }
+}

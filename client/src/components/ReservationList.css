@@ -1,0 +1,26 @@
+/* Styling for /reservationlist component */
+
+.reservations-ul {
+  padding: 0;
+}
+
+.reservation-list {
+  list-style: none;
+  margin-bottom: 4rem;
+  line-height: 1rem;
+}
+
+.link-text {
+  color: hsl(0, 97%, 47%);
+}
+
+/* Media breakpoint for screen widths larger then average mobile screen */
+@media only screen and (min-width: 38rem) {
+  .reservation-list {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+  }
+  h2 {
+    font-size: large;
+  }
+}
