@@ -1,4 +1,4 @@
-# Project - Reservationizr Application - Manage Restaurant Reservations
+# Reservationizr - Manage Restaurant Reservations
 
 <!-- PROJECT LOGO -->
 <br />
