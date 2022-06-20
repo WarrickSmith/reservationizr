@@ -31,8 +31,8 @@
       </ul></li>
     <li><a href="#architecture-diagrams">Architecture Diagrams</a></li>
     <li><a href="#api-specification">API Specification</a></li>
+    <li><a href="#view-the-application">View The Application</a></li>
     <li><a href="#notes">Notes</a></li>
-
   </ol>
 </details>
 
@@ -52,6 +52,7 @@ Key frameworks and technologies used in this project are:
 - [Jest](https://jestjs.io/) - Testing enviornment
 - [SuperTest](https://www.npmjs.com/package/supertest) - High-level abstraction for testing HTTP
 - [Netlify](https://www.netlify.com/) - Web Site public hosting service
+- [Auth0](https://auth0.com/) - An easy to implement, adaptable authentication and authorization platform.
 
 # Getting started
 
@@ -94,6 +95,12 @@ To view the documentation for the API specification:
 4. Open the link displayed in your browser (it's automatically copied to your clipboard)
 
    ![api docs](docs/api-docs.png)
+
+---
+
+### View The Application
+
+The application has been deployed in production to: https://reservationizr-ws.netlify.app/
 
 ---
 
