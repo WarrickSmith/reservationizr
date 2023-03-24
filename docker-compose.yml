@@ -7,7 +7,7 @@ services:
       context: ./server
       dockerfile: Dockerfile
     ports:
-      - '5000:5000'
+      - '5005:5005'
     depends_on:
       - database
     environment:
@@ -18,7 +18,7 @@ services:
       context: ./client
       dockerfile: Dockerfile
     ports:
-      - '3000:80'
+      - '4000:80'
     depends_on:
       - server
   database:
