@@ -1,12 +1,12 @@
-import "./App.css";
-import { Switch, Route } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
-import ProtectedRoute from "./auth/ProtectedRoute";
-import Header from "./components/Header";
-import Reservation from "./components/Reservation";
-import ReservationList from "./components/ReservationList";
-import RestaurantList from "./components/RestaurantList";
-import CreateReservation from "./components/CreateReservation";
+import './App.css';
+import { Switch, Route } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
+import ProtectedRoute from './auth/ProtectedRoute';
+import Header from './components/Header';
+import Reservation from './components/Reservation';
+import ReservationList from './components/ReservationList';
+import RestaurantList from './components/RestaurantList';
+import CreateReservation from './components/CreateReservation';
 
 const App = () => {
   const { isLoading } = useAuth0();
@@ -17,15 +17,15 @@ const App = () => {
   return (
     <>
       <Header />
-      <div className='container'>
+      <div className="container">
         <Switch>
           <ProtectedRoute
-            path='/restaurants/:restaurantId/reserve'
+            path="/restaurants/:restaurantId/reserve"
             component={CreateReservation}
           />
-          <ProtectedRoute path='/reservations/:id' component={Reservation} />
-          <ProtectedRoute path='/reservations' component={ReservationList} />
-          <Route path='/'>
+          <ProtectedRoute path="/reservations/:id" component={Reservation} />
+          <ProtectedRoute path="/reservations" component={ReservationList} />
+          <Route path="/">
             <RestaurantList />
           </Route>
         </Switch>

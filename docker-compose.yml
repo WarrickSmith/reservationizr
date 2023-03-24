@@ -1,12 +1,32 @@
-version: "3"
+version: '3'
+
 services:
-  db:
-    image: mongo
-    expose:
-      - "27017"
-    volumes:
-      - mongodb_data_container:/data/db
+  server:
+    container_name: reservationizr-server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
     ports:
-      - "27017:27017"
+      - '5000:5000'
+    depends_on:
+      - database
+    environment:
+      MONGO_URI: mongodb://database:27017/mongo
+  client:
+    container_name: reservationizr-client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - '3000:80'
+    depends_on:
+      - server
+  database:
+    container_name: reservationizr-db
+    image: mongo:4.4.6-bionic
+    volumes:
+      - data:/data/db
+    ports:
+      - '27017:27017'
 volumes:
-  mongodb_data_container:
+  data:
