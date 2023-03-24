@@ -1,4 +1,4 @@
-const port = process.env.PORT || 5005;
+const port = process.env.PORT || 5002;
 const dbPort = 27017;
 const app = require('./app');
 const mongoose = require('mongoose');
