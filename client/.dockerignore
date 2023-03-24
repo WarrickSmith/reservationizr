@@ -1,0 +1,12 @@
+# ignore all files and directories that start with "."
+.*
+
+# ignore the "node_modules" directory
+node_modules/
+
+# ignore log files
+*.log
+
+# ignore build artifacts
+build/
+dist/
