@@ -8,7 +8,7 @@ import Auth0ProviderWithHistory from './auth/Auth0ProviderWithHistory';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
+    <Router basename={'/reservationizr'}>
       <Auth0ProviderWithHistory>
         <App />
       </Auth0ProviderWithHistory>

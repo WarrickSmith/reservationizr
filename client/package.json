@@ -2,6 +2,7 @@
   "name": "02-exercise-api-request-in-react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/reservationizr/",
   "dependencies": {
     "@auth0/auth0-react": "^1.8.0",
     "@testing-library/jest-dom": "^5.14.1",
@@ -14,9 +15,6 @@
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.2"
-  },
-  "devDependencies": {
-    "dotenv": "^10.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -47,6 +45,7 @@
   },
   "devDependencies": {
     "history": "^5.0.1",
-    "timezone-mock": "^1.2.2"
+    "timezone-mock": "^1.2.2",
+    "dotenv": "^10.0.0"
   }
 }
