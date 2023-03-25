@@ -1,18 +1,26 @@
-# build environment
-FROM node:14-alpine as build
-WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
+# Use an official Node runtime as a parent image
+FROM node:16-alpine
 
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy package.json and package-lock.json to /app
 COPY package*.json ./
-RUN npm ci --silent
-RUN npm install react-scripts@4.0.3 -g --silent
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code to /app
 COPY . .
+
+# Build the application
 RUN npm run build
 
-# production environment
-FROM nginx:1.20.1-alpine
-COPY --from=build /app/build /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Set the environment variable to production
+ENV NODE_ENV=production
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Expose port 3000
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "start"]

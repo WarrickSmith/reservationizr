@@ -2,7 +2,7 @@ const port = process.env.PORT || 5000;
 const dbPort = 27017;
 const app = require('./app');
 const mongoose = require('mongoose');
-const dbURI = process.env.MONGO_URI || `mongodb://localhost:${dbPort}/mongo`;
+const dbURI = process.env.MONGODB_URI || `mongodb://localhost:${dbPort}/mongo`;
 
 const connectDB = async () => {
   try {
