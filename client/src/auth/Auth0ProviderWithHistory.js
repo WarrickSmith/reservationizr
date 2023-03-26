@@ -9,12 +9,8 @@ const Auth0ProviderWithHistory = ({ children }) => {
   const redirect =
     process.env.REACT_APP_AUTH0_REDIRECT_URI || window.location.origin;
 
-  console.log('RedirectURI : ', redirect);
-  console.log('Window Origin : ', window.location.origin);
-  console.log('Window Pathname : ', window.location.pathname);
-
   const onRedirectCallback = (appState) => {
-    history.push(appState?.returnTo || window.location.origin);
+    history.push(appState?.returnTo);
   };
 
   return (
