@@ -1,7 +1,7 @@
 // This component displays a Log In/Log out button in the page header. It's status is dependant on the user being successfully authenticated by auth0
 
-import "./LoginButton.css";
-import { useAuth0 } from "@auth0/auth0-react";
+import './LoginButton.css';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const LoginButton = () => {
   const { loginWithRedirect, logout, isAuthenticated, isLoading } = useAuth0();
@@ -13,8 +13,14 @@ const LoginButton = () => {
   if (isAuthenticated) {
     return (
       <button
-        className='btn-login'
-        onClick={() => logout({ returnTo: window.location.origin })}
+        className="btn-login"
+        onClick={() =>
+          logout({
+            returnTo:
+              process.env.REACT_APP_AUTH0_REDIRECT_URI ||
+              window.location.pathname,
+          })
+        }
       >
         Log Out
       </button>
@@ -22,7 +28,7 @@ const LoginButton = () => {
   }
 
   return (
-    <button className='btn-login' onClick={() => loginWithRedirect()}>
+    <button className="btn-login" onClick={() => loginWithRedirect()}>
       Log In
     </button>
   );
