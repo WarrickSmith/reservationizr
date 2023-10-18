@@ -16,3 +16,7 @@
   color: #1e0245;
   background: #fff;
 }
+
+.text-small {
+  font-size: 0.75rem;
+}
