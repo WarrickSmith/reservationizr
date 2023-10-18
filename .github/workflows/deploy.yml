@@ -1,35 +1,33 @@
 name: Deploy Production
 
-on: 
+on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: 'Tag of release package (eg: v1.0.0)'
+        description: 'Tag of release package (eg: v1.0.0)'  
         required: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
     
-    - name: Install Node.js
-      uses: actions/setup-node@v2
+    - uses: actions/checkout@v3
       with:
-        node-version: '16.x'
-
+        ref: main
+        ssh-key: ${{ secrets.SSH_KEY }}
+        
     - name: Deploy to IIS
       uses: webfactory/ssh-agent@v0.7.0
-      with: 
+      with:
         ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
-      
-    - name: Copy files via SSH 
+        
+    - name: Copy files via SSH
       uses: appleboy/scp-action@v0.1.4
       with:
         HOST: ${{ secrets.HOST }}
-        USERNAME: ${{ secrets.USERNAME }}
+        USERNAME: ${{ secrets.USERNAME }} 
         PORT: ${{ secrets.PORT }}
         PASSWORD: ${{ secrets.PASSWORD }}
-        source: "./${{ github.ref }}"
+        source: "main"
         target: "/DockerApps/reservationizr"
-        strip_components: 1
