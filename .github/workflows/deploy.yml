@@ -1,11 +1,28 @@
 name: Deploy Production
 
 on:
-  workflow_dispatch:
-    inputs:
-      release_tag:
-        description: 'Tag of release package (eg: v1.0.0)'  
-        required: true
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }} 
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd C:\DockerApps\reservationizr
+            git pull origin main
+
 
 # jobs:
 #   deploy:
@@ -31,24 +48,3 @@ on:
 #         PASSWORD: ${{ secrets.PASSWORD }}
 #         source: "main"
 #         target: "/DockerApps/reservationizr"
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Deploy to server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }} 
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: ${{ secrets.PORT }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            cd  C:\DockerApps\reservationizr
-            rm -rf * 
-            git pull origin main
-            npm start
