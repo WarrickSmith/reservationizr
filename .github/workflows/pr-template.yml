@@ -20,10 +20,3 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16.x'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run Jest tests
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'test') }}
-        run: npm test

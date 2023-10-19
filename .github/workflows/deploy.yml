@@ -7,27 +7,47 @@ on:
         description: 'Tag of release package (eg: v1.0.0)'  
         required: true
 
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+    
+#     - uses: actions/checkout@v3
+#       with:
+#         ref: main
+#         ssh-key: ${{ secrets.SSH_KEY }}
+        
+#     - name: Deploy to IIS
+#       uses: webfactory/ssh-agent@v0.7.0
+#       with:
+#         ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+        
+#     - name: Copy files via SSH
+#       uses: appleboy/scp-action@v0.1.4
+#       with:
+#         HOST: ${{ secrets.HOST }}
+#         USERNAME: ${{ secrets.USERNAME }} 
+#         PORT: ${{ secrets.PORT }}
+#         PASSWORD: ${{ secrets.PASSWORD }}
+#         source: "main"
+#         target: "/DockerApps/reservationizr"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    
-    - uses: actions/checkout@v3
-      with:
-        ref: main
-        ssh-key: ${{ secrets.SSH_KEY }}
-        
-    - name: Deploy to IIS
-      uses: webfactory/ssh-agent@v0.7.0
-      with:
-        ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
-        
-    - name: Copy files via SSH
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        HOST: ${{ secrets.HOST }}
-        USERNAME: ${{ secrets.USERNAME }} 
-        PORT: ${{ secrets.PORT }}
-        PASSWORD: ${{ secrets.PASSWORD }}
-        source: "main"
-        target: "/DockerApps/reservationizr"
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }} 
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+            cd /DockerApps/reservationizr
+            rm -rf * 
+            git pull origin main
+            npm install
+            npm start
