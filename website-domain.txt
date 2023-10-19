@@ -1,4 +1,4 @@
 Add your deployed website domain's / URL's below
 
-React application URL / domain:
+React application URL / domain: warricksmith.com/reservationzr
 API URL / domain:
