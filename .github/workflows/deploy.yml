@@ -1,4 +1,4 @@
-name: Deploy Production
+name: Deploy Production 
 
 on:
   release:
@@ -6,31 +6,28 @@ on:
 
 jobs:
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Install Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16.x'
-
+    - uses: actions/checkout@v3
+      
     - name: Deploy to Windows Server
+      uses: webfactory/ssh-agent@v0.7.0
+      with: 
+        ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+        
+    - name: Pull latest code
+
       run: |
-        # Connect to the Windows Server
-        $session = New-PSSession -ComputerName $env:HOST -Port $env:PORT -Credential (New-Object System.Management.Automation.PSCredential($env:USERNAME, (ConvertTo-SecureString $env:PASSWORD -AsPlainText -Force)))
-
-        # Change directory to the location of the local repository
-        Invoke-Command -Session $session -ScriptBlock {cd C:\DockerApps\reservationizr}
-
-        # Perform a git pull from the main branch
-        Invoke-Command -Session $session -ScriptBlock {git pull origin main}
-
-        # Close the session
-        Remove-PSSession -Session $session
-      env:
-        HOST: ${{ secrets.HOST }}
-        USERNAME: ${{ secrets.USERNAME }}
-        PORT: ${{ secrets.PORT }}
-        PASSWORD: ${{ secrets.PASSWORD }}
-
+        $sshKey = Get-Content -Path ${{secrets.SERVER_SSH_KEY}}
+        $passwd = ConvertTo-SecureString -String ${{secrets.PASSWORD}} -AsPlainText -Force
+        $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ${{secrets.USERNAME}}, $passwd
+        
+        # Copy private key to server
+        Set-Content -Path $env:USERPROFILE\.ssh\id_rsa -Value $sshKey
+        #(Get-Content -Path $env:USERPROFILE\.ssh\id_rsa)
+        
+        # Add known hosts
+        ssh-keyscan -H ${{secrets.HOST}} >> $env:USERPROFILE\.ssh\known_hosts
+        
+        # Git pull latest code
+        ssh ${{secrets.USERNAME}}@${{secrets.HOST}} -p ${{secrets.PORT}} "cd C:\DockerApps\reservationizr; git pull https://github.com/WarrickSmith/reservationizr main"
