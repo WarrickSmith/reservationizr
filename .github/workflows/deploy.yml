@@ -7,27 +7,44 @@ on:
         description: 'Tag of release package (eg: v1.0.0)'  
         required: true
 
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+    
+#     - uses: actions/checkout@v3
+#       with:
+#         ref: main
+#         ssh-key: ${{ secrets.SSH_KEY }}
+        
+#     - name: Deploy to IIS
+#       uses: webfactory/ssh-agent@v0.7.0
+#       with:
+#         ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+        
+#     - name: Copy files via SSH
+#       uses: appleboy/scp-action@v0.1.4
+#       with:
+#         HOST: ${{ secrets.HOST }}
+#         USERNAME: ${{ secrets.USERNAME }} 
+#         PORT: ${{ secrets.PORT }}
+#         PASSWORD: ${{ secrets.PASSWORD }}
+#         source: "main"
+#         target: "/DockerApps/reservationizr"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    
-    - uses: actions/checkout@v3
-      with:
-        ref: main
-        ssh-key: ${{ secrets.SSH_KEY }}
-        
-    - name: Deploy to IIS
-      uses: webfactory/ssh-agent@v0.7.0
-      with:
-        ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
-        
-    - name: Copy files via SSH
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        HOST: ${{ secrets.HOST }}
-        USERNAME: ${{ secrets.USERNAME }} 
-        PORT: ${{ secrets.PORT }}
-        PASSWORD: ${{ secrets.PASSWORD }}
-        source: "main"
-        target: "/DockerApps/reservationizr"
+      - uses: actions/checkout@v3
+
+      - name: Install SSH keys
+        uses: actions/setup-ssh@v3
+        with:
+          ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+
+      - name: Connect and pull
+        run: ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd /DockerApps/reservationizr && git checkout main && git pull"
+
+      - name: Cleanup
+        run: ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME}}@${{ secrets.HOST }} "cd /DockerApps/reservationizr && git reset --hard HEAD"
