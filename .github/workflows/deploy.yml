@@ -36,15 +36,18 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Install SSH keys
-        uses: actions/setup-ssh@v3
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
         with:
-          ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
-
-      - name: Connect and pull
-        run: ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd /DockerApps/reservationizr && git checkout main && git pull"
-
-      - name: Cleanup
-        run: ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME}}@${{ secrets.HOST }} "cd /DockerApps/reservationizr && git reset --hard HEAD"
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }} 
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+            cd /DockerApps/reservationizr
+            rm -rf * 
+            git pull origin main
+            npm install
+            npm start
