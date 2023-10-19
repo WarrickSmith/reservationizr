@@ -5,22 +5,19 @@ on:
     types: [published]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
+  update-main-branch:
+    runs-on: windows-latest
+    
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
-
-      - name: Deploy to Windows Server 
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.HOST }} 
-          REMOTE_USER: ${{ secrets.USERNAME }}
-          TARGET: C:/DockerApps/reservationizr/
-
+        
+      - name: Set up Git
         run: |
-          ssh $REMOTE_USER@$REMOTE_HOST "
-            git pull
-            git reset --hard origin/main
-          "
+          git config user.name "administrator"
+          git config user.email "administrator@warricksmith.com"
+        
+      - name: Push to Remote Repository
+        run: |
+          git remote add remote-repo ssh://administrator:EllaMay11@<warricksmith.com>/C:/DockerApps/reservationizr
+          git push remote-repo main
