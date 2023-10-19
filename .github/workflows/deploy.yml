@@ -1,23 +1,22 @@
-name: Deploy Production
+name: Deploy on Release
 
 on:
   release:
     types: [published]
 
 jobs:
-  update-main-branch:
-    runs-on: windows-latest
-    
+  deploy:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-        
-      - name: Set up Git
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure Git
         run: |
-          git config user.name "administrator"
-          git config user.email "administrator@warricksmith.com"
-        
-      - name: Push to Remote Repository
+          git config --global user.name "${{ secrets.USERNAME }}"
+          git config --global user.email "you@example.com"
+
+      - name: Push to remote repository
         run: |
-          git remote add remote-repo ssh://administrator:EllaMay11@<warricksmith.com>/C:/DockerApps/reservationizr
-          git push remote-repo main
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd /C/DockerApps/reservationizr && git pull"
+          git push ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{ secrets.PORT }}/C:/DockerApps/reservationizr main --force
