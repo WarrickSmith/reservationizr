@@ -1,4 +1,4 @@
-name: Deploy Production 
+name: Deploy Production
 
 on:
   release:
@@ -7,27 +7,20 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-      
-    - name: Deploy to Windows Server
-      uses: webfactory/ssh-agent@v0.7.0
-      with: 
-        ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
-        
-    - name: Pull latest code
 
-      run: |
-        $sshKey = Get-Content -Path ${{secrets.SERVER_SSH_KEY}}
-        $passwd = ConvertTo-SecureString -String ${{secrets.PASSWORD}} -AsPlainText -Force
-        $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ${{secrets.USERNAME}}, $passwd
-        
-        # Copy private key to server
-        Set-Content -Path $env:USERPROFILE\.ssh\id_rsa -Value $sshKey
-        #(Get-Content -Path $env:USERPROFILE\.ssh\id_rsa)
-        
-        # Add known hosts
-        ssh-keyscan -H ${{secrets.HOST}} >> $env:USERPROFILE\.ssh\known_hosts
-        
-        # Git pull latest code
-        ssh ${{secrets.USERNAME}}@${{secrets.HOST}} -p ${{secrets.PORT}} "cd C:\DockerApps\reservationizr; git pull https://github.com/WarrickSmith/reservationizr main"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to Windows Server 
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.HOST }} 
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: C:/DockerApps/reservationizr/
+
+        run: |
+          ssh $REMOTE_USER@$REMOTE_HOST "
+            git pull
+            git reset --hard origin/main
+          "
