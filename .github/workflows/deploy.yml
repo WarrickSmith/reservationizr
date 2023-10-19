@@ -5,23 +5,25 @@ on:
     types: [published]
 
 jobs:
-  deploy:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
 
-      - name: Deploy to server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }} 
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: ${{ secrets.PORT }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            cd C:\DockerApps\reservationizr
-            git pull origin main
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to server  
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        port: ${{ secrets.PORT }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          cd C:\DockerApps\reservationizr
+          git pull origin main
 
 
 # jobs:
