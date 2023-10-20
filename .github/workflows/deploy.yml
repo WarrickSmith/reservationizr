@@ -12,24 +12,25 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install Docker Compose
-        run: |
-          choco install docker-compose -y
+        run: pip install docker-compose
+        shell: powershell
 
       - name: SSH into the remote server
-        run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }}
+        run: sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }}
+        shell: powershell
 
       - name: Change directory to the c:\dockerapps\reservationizr directory
-        run: |
-          Set-Location -Path "c:\DockerApps\reservationizr"
+        run: cd c:\DockerApps\reservationizr
+        shell: powershell
 
       - name: Run git pull
-        run: |
-          git pull
+        run: git pull
+        shell: powershell
 
       - name: Run docker-compose up --build
-        run: |
-          docker-compose up --build
+        run: docker-compose up --build
+        shell: powershell
+
 
 # jobs:
 #   deploy:
