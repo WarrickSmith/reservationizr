@@ -16,7 +16,11 @@ jobs:
           git config --global user.name "${{ secrets.USERNAME }}"
           git config --global user.email "you@example.com"
 
-      - name: Push to remote repository
+      - name: Deploy to remote server repository
         run: |
           sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"
-          git push ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{ secrets.PORT }}/C:/DockerApps/reservationizr main --force
+         
+      - name: Deploy to remote server docker image
+        run: |
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose up"
+      
