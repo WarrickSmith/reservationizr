@@ -6,50 +6,21 @@ on:
 
 jobs:
   deploy:
-    runs-on: windows-latest
-
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Install Docker Compose
-        run: pip install docker-compose
-        shell: powershell
-
-      - name: Setup SSH
+      - name: Configure Git
         run: |
-          mkdir ~/.ssh/
-          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-        shell: bash
+          git config --global user.name "${{ secrets.USERNAME }}"
+          git config --global user.email "warrick@baybox.co.nz"
 
-      - name: SSH into the remote server and deploy
+      - name: Deploy to remote server repository
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "
-            cd c:\DockerApps\reservationizr
-            git pull
-            docker-compose up --build
-          "
-        shell: bash
-
-
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
-
-#       - name: Configure Git
-#         run: |
-#           git config --global user.name "${{ secrets.USERNAME }}"
-#           git config --global user.email "you@example.com"
-
-#       - name: Deploy to remote server repository
-#         run: |
-#           sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"
          
-#       - name: Deploy to remote server docker image
-#         run: |
-#           sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no -t ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose up --build"
+      - name: Deploy to remote server docker image
+        run: |
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no -t ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose up --build"
       
