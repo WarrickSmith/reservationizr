@@ -4,6 +4,28 @@ on:
   release:
     types: [published]
 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Docker Compose
+        run: sudo pip install docker-compose
+
+      - name: SSH into the remote server
+        run: ssh -i ${{ secrets.SERVER_SSH_KEY }} ${{ secrets.USERNAME }}@${{ secrets.HOST }}
+
+      - name: Change directory to the c:\dockerapps\reservationizr directory
+        run: cd c:\dockerapps\reservationizr
+
+      - name: Run git pull
+        run: git pull
+
+      - name: Run docker-compose up --build
+        run: docker-compose up --build
+
 # jobs:
 #   deploy:
 #     runs-on: ubuntu-latest
@@ -24,27 +46,3 @@ on:
 #         run: |
 #           sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no -t ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose up --build"
       
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Install Docker Compose
-        run: sudo pip install docker-compose
-
-      - name: SSH into the remote server
-        run: sshpass -p ${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }}
-
-      - name: Change directory to the c:\dockerapps\reservationizr directory
-        run: cd c:\dockerapps\reservationizr
-
-      - name: Run git pull
-        run: git pull
-
-      - name: Run docker-compose up --build
-        run: docker-compose up --build
-
-      - name: Disconnect from the remote server
-        run: exit
