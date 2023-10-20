@@ -18,7 +18,7 @@ jobs:
         run: sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }}
 
       - name: Change directory to the c:\dockerapps\reservationizr directory
-        run: cd /c/DockerApps/reservationizr
+        run: cd c:\\DockerApps\\reservationizr
 
       - name: Run git pull
         run: git pull
