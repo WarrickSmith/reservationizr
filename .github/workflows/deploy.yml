@@ -15,7 +15,7 @@ jobs:
         run: sudo pip install docker-compose
 
       - name: SSH into the remote server
-        run: ssh -i ${{ secrets.SERVER_SSH_KEY }} ${{ secrets.USERNAME }}@${{ secrets.HOST }}
+        run: sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }}
 
       - name: Change directory to the c:\dockerapps\reservationizr directory
         run: cd c:\dockerapps\reservationizr
