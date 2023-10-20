@@ -6,25 +6,30 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Install Docker Compose
-        run: sudo pip install docker-compose
+        run: |
+          choco install docker-compose -y
 
       - name: SSH into the remote server
-        run: sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }}
+        run: |
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }}
 
       - name: Change directory to the c:\dockerapps\reservationizr directory
-        run: cd c:\\DockerApps\\reservationizr
+        run: |
+          Set-Location -Path "c:\DockerApps\reservationizr"
 
       - name: Run git pull
-        run: git pull
+        run: |
+          git pull
 
       - name: Run docker-compose up --build
-        run: docker-compose up --build
+        run: |
+          docker-compose up --build
 
 # jobs:
 #   deploy:
