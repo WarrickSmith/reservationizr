@@ -22,4 +22,8 @@ jobs:
          
       - name: Deploy to remote server docker image
         run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "if ! docker context ls \\| grep -q remotecontext\\; then docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}\\; fi && docker --context remotecontext compose up --build"
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no -t ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && DOCKER_HOST=${{ secrets.HOST }} docker-compose up --build"  
+
+      # - name: Deploy to remote server docker image
+      #   run: |
+      #     sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "if ! docker context ls \\| grep -q remotecontext\\; then docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}\\; fi && docker --context remotecontext compose up --build"
