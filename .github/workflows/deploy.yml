@@ -37,6 +37,12 @@ jobs:
       - name: SSH into the remote server
         run: sshpass -p ${{ secrets.SSH_PASSWORD }} ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}
 
+      - name: Change directory to the c:\dockerapps\reservationizr directory
+        run: cd c:\dockerapps\reservationizr
+
+      - name: Run git pull
+        run: git pull
+
       - name: Run docker-compose up --build
         run: docker-compose up --build
 
