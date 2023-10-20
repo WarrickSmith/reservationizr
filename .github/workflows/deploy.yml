@@ -35,7 +35,7 @@ jobs:
         run: sudo pip install docker-compose
 
       - name: SSH into the remote server
-        run: ssh -o StrictHostKeyChecking=no -i ${{ secrets.SERVER_SSH_KEY }} ${{ secrets.USERNAME }}@${{ secrets.HOST }}
+        run: sshpass -p ${{ secrets.SSH_PASSWORD }} ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}
 
       - name: Run docker-compose up --build
         run: docker-compose up --build
