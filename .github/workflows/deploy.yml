@@ -4,23 +4,41 @@ on:
   release:
     types: [published]
 
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Configure Git
+#         run: |
+#           git config --global user.name "${{ secrets.USERNAME }}"
+#           git config --global user.email "you@example.com"
+
+#       - name: Deploy to remote server repository
+#         run: |
+#           sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"
+         
+#       - name: Deploy to remote server docker image
+#         run: |
+#           sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no -t ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose up --build"
+      
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Configure Git
-        run: |
-          git config --global user.name "${{ secrets.USERNAME }}"
-          git config --global user.email "you@example.com"
+      - name: Install Docker Compose
+        run: sudo pip install docker-compose
 
-      - name: Deploy to remote server repository
-        run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"
-         
-      - name: Deploy to remote server docker image
-        run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no -t ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose up --build"
-      
+      - name: SSH into the remote server
+        run: ssh -o StrictHostKeyChecking=no -i ${{ secrets.SERVER_SSH_KEY }} ${{ secrets.USERNAME }}@${{ secrets.HOST }}
+
+      - name: Run docker-compose up --build
+        run: docker-compose up --build
+
+      - name: Disconnect from the remote server
+        run: exit
