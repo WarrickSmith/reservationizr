@@ -21,5 +21,5 @@ jobs:
           sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"
          
       - name: Deploy to remote server docker image
-        run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no -t ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }} && docker --context remotecontext compose up --build"
+        run: | 
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }} && docker --context remotecontext compose up --build"
