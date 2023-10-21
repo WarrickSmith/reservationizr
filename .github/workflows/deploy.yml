@@ -8,22 +8,44 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Configure Git
-        run: |
-          git config --global user.name "${{ secrets.USERNAME }}"
-          git config --global user.email "warrick@baybox.co.nz"
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        name: id_rsa
 
-      - name: Deploy to remote server repository
-        run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"
-         
-      - name: Deploy to remote server docker image
-        run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && DOCKER_HOST=${{ secrets.HOST }} docker-compose up --build"  
+    - name: Configure remote context
+      run: |
+        mkdir -p ~/.docker/contexts
+        echo "default: ssh://{{secrets.USERNAME}}@{{secrets.HOST}}:22" > ~/.docker/contexts/remote
+        docker context use remote
 
-      # - name: Deploy to remote server docker image
-      #   run: |
-      #     sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "if ! docker context ls \\| grep -q remotecontext\\; then docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}\\; fi && docker --context remotecontext compose up --build"
+    - name: Deploy with docker-compose
+      run: docker-compose --context remote up --build
+
+    - name: Notify deployment complete
+      run: |
+        curl -X POST -H "Content-Type: application/json" --data '{"text":"Deployment completed!"}'   
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Configure Git
+#         run: |
+#           git config --global user.name "${{ secrets.USERNAME }}"
+#           git config --global user.email "warrick@baybox.co.nz"
+
+#       - name: Deploy to remote server repository
+#         run: |
+#           sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"      
+    
+#       - name: Deploy to remote server docker image
+#         run: |
+#           sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "if ! docker context ls \\| grep -q remotecontext\\; then docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}\\; fi && docker --context remotecontext compose up --build"
