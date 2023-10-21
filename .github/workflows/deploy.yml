@@ -24,9 +24,9 @@ jobs:
         run: |
           sshpass -p "${{ secrets.PASSWORD }}" ssh -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker context ls | findstr /C:"remotecontext" || docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}"
 
-      - name: Check for existing docker context
+      - name: Show existing docker context
         run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker context use remotecontext && docker context ls"
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker context use remotecontext && docker context ls && docker-compose up --build"
 
       # - name: Deploy docker image
       #   run: |
