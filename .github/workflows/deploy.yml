@@ -22,11 +22,14 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: SSH into remote server
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@v2
       with:
         host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
+        username: ${{ secrets.USERNAME }} 
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: 22
+        script_stop: true
+        enable_ssh_keyscan: true
 
     - name: Build image on remote server  
       run: |
