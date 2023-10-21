@@ -28,17 +28,17 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
-          whoami
-          dir
-          shutdown /s /t 0
+          cd /dockerapps/reservationizr 
+          docker-compose build
+          docker stack deploy -c /dockerapps/reservationizr/docker-compose.yml reservationizr
 
-    - name: Build image on remote server  
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd /dockerapps/reservationizr && docker-compose build"
+    # - name: Build image on remote server  
+    #   run: |
+    #     ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd /dockerapps/reservationizr && docker-compose build"
 
-    - name: Deploy stack
-      run: |  
-        ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker stack deploy -c /dockerapps/reservationizr/docker-compose.yml reservationizr"
+    # - name: Deploy stack
+    #   run: |  
+    #     ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker stack deploy -c /dockerapps/reservationizr/docker-compose.yml reservationizr"
 
 
 # name: Deploy on Release
