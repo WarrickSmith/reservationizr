@@ -7,24 +7,24 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-steps:
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Configure Git 
+        run: |
+          git config --global user.name "${{ secrets.USERNAME }}"  
+          git config --global user.email "email@example.com"
 
-    - name: Configure Git 
-      run: |
-        git config --global user.name "${{ secrets.USERNAME }}"  
-        git config --global user.email "email@example.com"
+      - name: Deploy to remote server repository
+        run: |
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "bash -c 'cd C:\\DockerApps\\reservationizr && git pull'"
 
-    - name: Deploy to remote server repository
-      run: |
-        sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "bash -c 'cd C:\\DockerApps\\reservationizr && git pull'"
+      - name: Check for existing docker context
+        run: |
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker context ls | Select-String remotecontext || docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}"
 
-    - name: Check for existing docker context
-      run: |
-        sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker context ls | Select-String remotecontext || docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}"
-
-    - name: Deploy docker image
-      run: |
-        sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker-compose --context remotecontext up --build"
+      - name: Deploy docker image
+        run: |
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker-compose --context remotecontext up --build"
