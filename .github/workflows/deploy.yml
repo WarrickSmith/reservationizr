@@ -28,7 +28,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
-          cd /dockerapps/reservationizr 
+          cd c:\\dockerapps\\reservationizr 
           docker-compose build
           docker stack deploy -c /dockerapps/reservationizr/docker-compose.yml reservationizr
 
