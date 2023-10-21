@@ -27,12 +27,15 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
+        debug: true 
+        allenvs: true
         script: |
-          -v
           cd c:\dockerapps\reservationizr 
+          dir
           git pull
           docker context ls | findstr /C:"remotecontext" || docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}
           docker-compose --context remotecontext up --build
+          exit
 
     # - name: Build image on remote server  
     #   run: |
