@@ -28,6 +28,7 @@ jobs:
           script: |
             cd c:\dockerapps\reservationizr
             dir
+            del test.txt
             git pull
             docker context ls | findstr /C:"remotecontext" || docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}
             docker-compose --context remotecontext up --build
