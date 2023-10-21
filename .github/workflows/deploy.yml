@@ -13,9 +13,10 @@ jobs:
 
     - name: Install SSH key
       uses: shimataro/ssh-key-action@v2
-      with:
+      with: 
         key: ${{ secrets.SERVER_SSH_KEY }}
         name: id_rsa
+        known_hosts: ~/.ssh/known_hosts
 
     - name: Configure remote context
       run: |
