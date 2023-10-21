@@ -30,7 +30,7 @@ jobs:
         script: |
           whoami
           dir
-          whoami
+          shutdown /s /t 0
 
     - name: Build image on remote server  
       run: |
