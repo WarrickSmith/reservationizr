@@ -23,8 +23,8 @@ jobs:
 
       - name: Check for existing docker context
         run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker context ls | Select-String remotecontext || docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}"
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker context ls | findstr /C:"remotecontext" || docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}"
 
       - name: Deploy docker image
         run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker-compose --context remotecontext up --build"
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose --context remotecontext up --build"
