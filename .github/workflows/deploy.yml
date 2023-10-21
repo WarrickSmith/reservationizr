@@ -26,7 +26,7 @@ jobs:
 
       - name: Check for existing docker context
         run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker ‐‐context remote ps"
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker context use remotecontext && docker context ls"
 
       # - name: Deploy docker image
       #   run: |
