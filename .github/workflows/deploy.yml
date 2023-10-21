@@ -1,5 +1,4 @@
 name: Deploy on Release
-
 on:
   release:
     types: [published]
@@ -7,24 +6,56 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Configure Git 
-        run: |
-          git config --global user.name "${{ secrets.USERNAME }}"  
-          git config --global user.email "warrick@baybox.co.nz"
+      - name: SSH into remote server
+        uses: ssh-actions/ssh@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }} 
+          password: ${{ secrets.PASSWORD }}
 
-      - name: Deploy to remote server repository
-        run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"    
+      - name: Pull latest code
+        run: git pull
 
-      - name: Check for existing docker context
-        run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker context ls | findstr /C:"remotecontext" || docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}"
+      - name: Check docker context
+        run: docker context ls | findstr /C:"remotecontext" || docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}
 
-      - name: Deploy docker image
-        run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose --context remotecontext up --build"
+      - name: Deploy docker compose
+        run: cd C:\DockerApps\reservationizr && docker-compose --context remotecontext up --build
+
+
+
+
+# name: Deploy on Release
+# on: 
+#   release:
+#     types: [published]
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+    
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Configure Git 
+#         run: |
+#           git config --global user.name "${{ secrets.USERNAME }}"  
+#           git config --global user.email "warrick@baybox.co.nz"
+
+#       - name: Deploy to remote server repository
+#         run: |
+#           sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"    
+
+#       - name: Check for existing docker context
+#         run: |
+#           sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker context ls | findstr /C:"remotecontext" || docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}"
+
+#       - name: Deploy docker image
+#         run: |
+#           sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose --context remotecontext up --build"
