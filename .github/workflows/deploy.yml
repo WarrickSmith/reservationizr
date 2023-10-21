@@ -26,6 +26,7 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         
     - name: Build image on remote server
