@@ -5,37 +5,33 @@ on:
     types: [published]
 
 jobs:
-
   deploy:
-
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-    
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Docker login  
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Docker login
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: SSH into remote server
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        debug: true 
-        allenvs: true
-        script: |
-          cd c:\dockerapps\reservationizr 
-          dir
-          git pull
-          docker context ls | findstr /C:"remotecontext" || docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}
-          docker-compose --context remotecontext up --build
-          exit
+      - name: SSH into remote server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          debug: true
+          script: |
+            cd c:\dockerapps\reservationizr
+            dir
+            git pull
+            docker context ls | findstr /C:"remotecontext" || docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}
+            docker-compose --context remotecontext up --build
+            exit
 
     # - name: Build image on remote server  
     #   run: |
