@@ -19,7 +19,7 @@ jobs:
 
       - name: Deploy to remote server repository
         run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt ${{ secrets.USERNAME }}@${{ secrets.HOST }} "bash -c 'cd C:\\DockerApps\\reservationizr && git pull'"
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"    
 
       - name: Check for existing docker context
         run: |
