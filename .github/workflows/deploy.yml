@@ -28,9 +28,11 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
-          cd c:\\dockerapps\\reservationizr 
-          docker-compose build
-          docker stack deploy -c /dockerapps/reservationizr/docker-compose.yml reservationizr
+          -v
+          cd c:\dockerapps\reservationizr 
+          git pull
+          docker context ls | findstr /C:"remotecontext" || docker context create remotecontext --docker host=ssh://${{ secrets.USERNAME }}@${{ secrets.HOST }}
+          docker-compose --context remotecontext up --build
 
     # - name: Build image on remote server  
     #   run: |
