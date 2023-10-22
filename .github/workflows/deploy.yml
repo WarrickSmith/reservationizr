@@ -30,11 +30,9 @@ jobs:
 
       - name: Docker compose up
         run: |
-          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose up --build"
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && dir && docker-compose up --build"
 
-      # - name: Deploy docker image
-      #   run: |
-      #     sshpass -p "${{ secrets.PASSWORD }}" ssh -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose --context remotecontext up --build"
+
 
 
 
