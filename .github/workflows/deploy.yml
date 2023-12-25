@@ -21,9 +21,9 @@ jobs:
     - name: Deploy to remote server
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd /DockerApps/reservationizr
           git pull
