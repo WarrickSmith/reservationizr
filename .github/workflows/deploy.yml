@@ -1,60 +1,27 @@
-name: Deploy on Release 
-
+name: Deploy on Release
 on:
   release:
     types: [published]
 
 jobs:
-
   deploy:
     runs-on: ubuntu-latest
-
+     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Configure Git 
-      run: |
-        git config --global user.name "${{ secrets.USERNAME }}"
-        git config --global user.email "warrick@baybox.co.nz"
+      - name: Configure Git 
+        run: |
+          git config --global user.name "${{ secrets.USERNAME }}"  
+          git config --global user.email "warrick@baybox.co.nz"
 
-    - name: Deploy to remote server
-      uses: appleboy/ssh-action@master
-      with:
-        HOST: ${{ secrets.HOST }}
-        USERNAME: ${{ secrets.USERNAME }}
-        KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          cd \
-          cd DockerApps\reservationizr
-          git pull
-          docker-compose up --build -d
+      - name: Deploy to remote server repository
+        run: |
+          echo "${{ secrets.SERVER_SSH_KEY }}" > key.pem
+          chmod 400 key.pem
+          ssh -i key.pem -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\catcouture && git pull"   
 
-
-# name: Deploy on Release
-# on: 
-#   release:
-#     types: [published]
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-    
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
-
-#       - name: Configure Git 
-#         run: |
-#           git config --global user.name "${{ secrets.USERNAME }}"  
-#           git config --global user.email "warrick@baybox.co.nz"
-
-#       - name: Deploy to remote server repository
-#         run: |
-#           sshpass -p "${{ secrets.PASSWORD }}" ssh -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"    
-
-#       - name: Docker compose up
-#         run: |
-#           sshpass -p "${{ secrets.PASSWORD }}" ssh -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose up --build -d"
-
-
+      - name: Docker compose up
+        run: |
+          ssh -i key.pem -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\catcouture && docker-compose up --build -d"
