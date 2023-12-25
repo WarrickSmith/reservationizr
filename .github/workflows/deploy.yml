@@ -1,35 +1,33 @@
+name: Deploy on Release 
 
-name: Deploy on Release
-on: 
+on:
   release:
     types: [published]
 
 jobs:
+
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Configure Git 
-        run: |
-          git config --global user.name "${{ secrets.USERNAME }}"  
-          git config --global user.email "warrick@baybox.co.nz"
+    - name: Configure Git 
+      run: |
+        git config --global user.name "${{ secrets.USERNAME }}"
+        git config --global user.email "warrick@baybox.co.nz"
 
-      - name: Install SSH key
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Deploy to remote server repository
-        run: |
-          ssh -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"    
-
-      - name: Docker compose up
-        run: |
-          ssh -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose up --build -d"
-
+    - name: Deploy to remote server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /DockerApps/reservationizr
+          git pull
+          docker-compose up --build -d
 
 
 # name: Deploy on Release
