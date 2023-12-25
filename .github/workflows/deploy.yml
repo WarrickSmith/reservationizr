@@ -18,7 +18,7 @@ jobs:
 
       - name: Deploy to remote server repository
         run: |
-          echo "${{ secrets.SERVER_SSH_KEY }}" > key.pem
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
           chmod 400 key.pem
           ssh -i key.pem -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\catcouture && git pull"   
 
