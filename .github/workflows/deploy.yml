@@ -21,11 +21,11 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
           chmod 400 key.pem
           # Use native Windows SSH client for CMD compatibility
-          ssh -i key.pem -t ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd /c/DockerApps/reservationizr && git pull"
+          ssh -i key.pem -t ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"
 
       - name: Docker compose up
         # Use SSH agent forwarding for credential access
         env:
           SSH_AUTH_SOCK: /run/host-services/ssh-auth.sock
         run: |
-          ssh -A -i key.pem -t ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd /c/DockerApps/reservationizr && docker-compose up --build -d"
+          ssh -A -i key.pem -t ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose up --build -d"
