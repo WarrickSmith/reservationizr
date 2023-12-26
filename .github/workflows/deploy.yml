@@ -1,4 +1,4 @@
-name: Deploy on Release
+name: Deploy on Release 
 on:
   release:
     types: [published]
@@ -6,22 +6,27 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-     
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code  
+      uses: actions/checkout@v3
 
-      - name: Configure Git
-        run: |
-          git config --global user.name "${{ secrets.USERNAME }}"  
-          git config --global user.email "warrick@baybox.co.nz"
+    - name: Configure Git
+      run: |
+        git config --global user.name "${{ secrets.USERNAME }}"
+        git config --global user.email "warrick@baybox.co.nz"
+      
+    - name: Deploy to remote server repository
+      run: |  
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
+        chmod 400 key.pem
+        ssh -i key.pem -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"
 
-      - name: Deploy to remote server repository
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
-          chmod 400 key.pem
-          ssh -i key.pem -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"   
+    - name: Docker login
+      run: |
+        echo "${{ secrets.DOCKER_TOKEN }}" > pwd.txt
+        ssh -i key.pem -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && cat pwd.txt | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin"
 
-      - name: Docker compose up
-        run: |
-          echo "${{ secrets.DOCKER_TOKEN }}" | ssh -A -i key.pem -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin && docker-compose up --build -d"
+    - name: Docker compose up  
+      run: |
+        ssh -i key.pem -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose up --build -d"
