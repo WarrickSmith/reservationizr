@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # Use a runner with Plink pre-installed
 
     steps:
       - name: Checkout code
@@ -20,7 +20,6 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
           chmod 400 key.pem
-          # Use plink for Windows SSH connectivity
           plink -i key.pem -t -ssh -batch ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd /cygdrive/c/DockerApps/reservationizr && git pull"
 
       - name: Docker compose up
