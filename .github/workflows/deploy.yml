@@ -6,22 +6,26 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-     
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Configure Git 
+      - name: Configure Git
         run: |
-          git config --global user.name "${{ secrets.USERNAME }}"  
+          git config --global user.name "${{ secrets.USERNAME }}"
           git config --global user.email "warrick@baybox.co.nz"
 
       - name: Deploy to remote server repository
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
           chmod 400 key.pem
-          ssh -i key.pem -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && git pull"   
+          # Use plink for Windows SSH connectivity
+          plink -i key.pem -t -ssh -batch ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd /cygdrive/c/DockerApps/reservationizr && git pull"
 
       - name: Docker compose up
+        # Use SSH agent forwarding for credential access
+        env:
+          SSH_AUTH_SOCK: /run/host-services/ssh-auth.sock
         run: |
-          ssh -i key.pem -tt -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd C:\DockerApps\reservationizr && docker-compose up --build -d"
+          plink -A -i key.pem -t -ssh -batch ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd /cygdrive/c/DockerApps/reservationizr && docker-compose up --build -d"
