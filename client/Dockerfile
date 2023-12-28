@@ -4,6 +4,8 @@ FROM node:16-alpine
 # Set the working directory to /app
 WORKDIR /app
 
+ENV CHOKIDAR_USEPOLLING=true
+
 # Copy package.json and package-lock.json to /app
 COPY package*.json ./
 
