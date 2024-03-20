@@ -111,3 +111,6 @@ server/cypress/videos
 server/cypress/screenshots
 server/cypress/plugins
 server/cypress/support
+
+# Environment
+.env
