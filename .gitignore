@@ -114,3 +114,5 @@ server/cypress/support
 
 # Environment
 .env
+client/.env
+*.env
