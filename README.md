@@ -70,9 +70,9 @@ The `client` folder contains the React Application, and the `server` folder cont
 - Type `npm install` to install npm dependencies
 - Type `npm start` to start the Express Server
 
-## MongoDB Database
+## MongoDB Database + Server & Client Apps in Local Docker
 
-- In a new Terminal, type `docker-compose up` to start the MongoDB server in a Docker container
+- In a new Terminal, type `docker compose -f docker-compose-dev.yml up --build` to start the MongoDB server in a Docker container
 - Connect to MongoDB using [MongoDB Compass](https://www.mongodb.com/products/compass). Create a database named `mongo`, a collection named `restaurants`, and load data from the [data](./data) folder into the database.
 
 ---
