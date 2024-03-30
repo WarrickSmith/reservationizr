@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "nodemon src/server.js",
+    "start:prod": "NODE_ENV=production node index.js",
     "test": "jest --verbose ./src",
     "test:e2e": "jest --verbose ./e2e",
     "test:watch": "jest --watch",
