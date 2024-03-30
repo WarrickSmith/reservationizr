@@ -9,11 +9,11 @@ services:
     depends_on:
       - db
     environment:
-      -  REACT_APP_AUTH0_DOMAIN=${REACT_APP_AUTH0_DOMAIN}
-      -  REACT_APP_AUTH0_CLIENT_ID=${REACT_APP_AUTH0_CLIENT_ID}
-      -  REACT_APP_AUTH0_AUDIENCE=${REACT_APP_AUTH0_AUDIENCE}
-      -  REACT_APP_API_URL=${REACT_APP_API_URL}
-      -  REACT_APP_AUTH0_REDIRECT_URI=${REACT_APP_AUTH0_REDIRECT_URI}
+      - REACT_APP_AUTH0_DOMAIN=${REACT_APP_AUTH0_DOMAIN}
+      - REACT_APP_AUTH0_CLIENT_ID=${REACT_APP_AUTH0_CLIENT_ID}
+      - REACT_APP_AUTH0_AUDIENCE=${REACT_APP_AUTH0_AUDIENCE}
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
+      - REACT_APP_AUTH0_REDIRECT_URI=${REACT_APP_AUTH0_REDIRECT_URI}
 
   server:
     build:
@@ -25,12 +25,13 @@ services:
       - db
     environment:
       - MONGODB_URI=${MONGODB_URI}
+
   db:
     image: mongo:4.4
     restart: always
     ports:
       - '27017:27017'
-  volumes:
+    volumes:
       - db-data:/data/db
 
 volumes:
