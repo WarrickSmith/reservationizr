@@ -6,14 +6,14 @@ services:
     restart: always
     ports:
       - '3002:3000'
-    depends_on:
-      - db
     environment:
       - REACT_APP_AUTH0_DOMAIN=${REACT_APP_AUTH0_DOMAIN}
       - REACT_APP_AUTH0_CLIENT_ID=${REACT_APP_AUTH0_CLIENT_ID}
       - REACT_APP_AUTH0_AUDIENCE=${REACT_APP_AUTH0_AUDIENCE}
       - REACT_APP_API_URL=${REACT_APP_API_URL}
       - REACT_APP_AUTH0_REDIRECT_URI=${REACT_APP_AUTH0_REDIRECT_URI}
+    networks:
+      - app-network
 
   server:
     build:
@@ -21,18 +21,11 @@ services:
     restart: always
     ports:
       - '5002:5000'
-    depends_on:
-      - db
     environment:
       - MONGODB_URI=${MONGODB_URI}
+    networks:
+      - app-network
 
-  db:
-    image: mongo:4.4
-    restart: always
-    ports:
-      - '27017:27017'
-    volumes:
-      - db-data:/data/db
-
-volumes:
-  db-data:
+networks:
+  app-network:
+    external: true
